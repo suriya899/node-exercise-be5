@@ -2,7 +2,7 @@ import express from "express";
 import { pool } from "./db.mjs";
 
 const app = express();
-const port = 4000;
+const port = 4001;
 
 app.use(express.json());
 
