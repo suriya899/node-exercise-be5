@@ -3,7 +3,7 @@ const { Pool } = pg.default;
 
 const pool = new Pool({
 	connectionString:
-		"postgresql://<username>:<password>@<hostname>:5432/<database_name>",
+		"postgresql://postgres:Post028688992@localhost:5432/movies",
 });
 
 export { pool };
