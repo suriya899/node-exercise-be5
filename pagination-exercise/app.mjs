@@ -12,19 +12,30 @@ app.get("/movies", async (req, res) => {
 		const genres = req.query.genres;
 		const keywords = req.query.keywords;
 
+		const page = req.query.page || 1;
+		// const page = Number(req.query.page) || 1;
+
+		const PAGE_SIZE = 5;
+
+		const offset = (page - 1) * PAGE_SIZE;
+
 		let query = "select * from movies";
 		let values = [];
 
 		if (keywords && genres) {
-			query += " where genres ilike $1 and title ilike $2";
-			values = [`%${genres}%`, `%${keywords}%`];
+			query += " where genres ilike $1 and title ilike $2 limit $3 offset $4";
+			values = [`%${genres}%`, `%${keywords}%`, PAGE_SIZE, offset];
 		} else if (keywords) {
-			query += " where keywords ilike $1";
-			values = [`%${keywords}%`];
+			query += " where keywords ilike $1 limit $2 offset $3";
+			values = [`%${keywords}%`, PAGE_SIZE, offset];
 		} else if (genres) {
-			query += " where genres ilike $1";
-			values = [`%${genres}%`];
+			query += " where genres ilike $1 limit $2 offset $3";
+			values = [`%${genres}%`, PAGE_SIZE, offset];
 		}
+			else {
+				query += " limit $1 offset $2";
+				values = [PAGE_SIZE, offset]
+			}
 		// แก้ไขโค้ดเพื่อทำ Pagination ได้ข้างบนนี้ 🔼🔼🔼
 
 		const result = await pool.query(query, values);
